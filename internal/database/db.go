@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
+	"os/user"
 
 	"github.com/priyanshu334/taskmanage2/internal/config"
 	"gorm.io/driver/postgres"
@@ -21,6 +22,7 @@ func Connect(cfg *config.Config) {
 	if err != nil {
 		log.Fatal("DB connection failed:", err)
 	}
-
+	db.AutoMigrate(&user.User{})
 	DB = db
+
 }
