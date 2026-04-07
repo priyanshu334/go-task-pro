@@ -16,6 +16,7 @@ func main() {
 	log := logger.Log
 
 	database.Connect(cfg)
+	database.ConnectRedis()
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: middleware.ErrorHandler,
