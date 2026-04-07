@@ -13,9 +13,14 @@ import (
 func main() {
 	cfg := config.LoadConfig()
 	logger.Init()
+	log := logger.Log
+
 	database.Connect(cfg)
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: middleware.ErrorHandler,
+	})
+	app.Use(middleware.Logger(log))
 	userRepo := user.NewRepository()
 	userService := user.NewService(userRepo)
 	userHandler := user.NewHandler(userService)
@@ -35,6 +40,8 @@ func main() {
 	taskHandler := task.NewHandler(taskService)
 	protected.Post("/tasks", taskHandler.Create)
 	protected.Get("/tasks", taskHandler.GetAll)
+	protected.Put("/task/:id", taskHandler.Update)
+	protected.Delete("/task/:id", taskHandler.Delete)
 	app.Get("/", func(c fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"message": "Task mange api is running",

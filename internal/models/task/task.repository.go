@@ -28,3 +28,17 @@ func (r *Repository) FindAll(userID string, status string, search string, limit 
 	err := query.Limit(limit).Offset(offset).Find(&tasks).Error
 	return tasks, err
 }
+
+func (r *Repository) FindByID(id string) (*Task, error) {
+	var task Task
+	err := database.DB.First(&task, "id=?", id).Error
+	return &task, err
+}
+
+func (r *Repository) Update(task *Task) error {
+	return database.DB.Save(task).Error
+}
+
+func (r *Repository) Delete(task *Task) error {
+	return database.DB.Delete(task).Error
+}
